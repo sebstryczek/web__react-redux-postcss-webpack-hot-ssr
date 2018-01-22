@@ -1,4 +1,4 @@
-# web__react-redux-postcss-webpack-hot--no-ssr
+# web__react-redux-postcss-webpack-hot-ssr
 
 ## What?
 This is simple react-starer. Yeah, another one! I will tell you why, in the moment.
@@ -8,6 +8,7 @@ Tech stack:
 3. PostCSS
 4. Webpack
 5. Firebase
+6. Server Side Rendering
 
 ## Why?
 I created it just to learn how these technologies work together.
