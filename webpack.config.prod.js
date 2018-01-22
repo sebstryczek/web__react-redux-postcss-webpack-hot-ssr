@@ -1,10 +1,8 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 
 module.exports = {
@@ -13,7 +11,7 @@ module.exports = {
   entry: {
     client: [
       'babel-polyfill',
-      './src/client/index.jsx'
+      path.resolve(__dirname, 'src/client/index.jsx')
     ]
   },
   output: {
@@ -25,11 +23,17 @@ module.exports = {
     rules: [
       {
         test: /\.jsx?$/,
-        exclude: /node_modules/,
-        use: ['babel-loader']
+        include: path.resolve(__dirname, 'src'),
+        use: {
+          loader: 'babel-loader',
+          options: {
+            forceEnv: 'web'
+          },
+        }
       },
       {
         test: /\.css$/,
+        include: path.resolve(__dirname, 'src'),
         use: ExtractTextPlugin.extract({
           fallback: "style-loader",
           use: [
@@ -41,11 +45,6 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.DefinePlugin({
-      'process.env': {
-        NODE_ENV: JSON.stringify('production')
-      }
-    }),
     new UglifyJsPlugin({
       sourceMap: true,
       uglifyOptions: {
@@ -54,10 +53,6 @@ module.exports = {
         }
       }
     }),
-    new CleanWebpackPlugin(['build']),
-    new CopyWebpackPlugin([
-      { from: './src/server/index.js', to: './index.js' }
-    ]),
     new HtmlWebpackPlugin({
       template: './src/client/template/index.html',
       filename: 'public/index.html'
@@ -79,24 +74,21 @@ module.exports = {
         windows: false
       }
     }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['vendor'],
-      minChunks: Infinity
-    }),
     new ExtractTextPlugin({ filename: 'public/css/styles.[contenthash].css', disable: false, allChunks: true }),
     new webpack.optimize.CommonsChunkPlugin({
       name: 'vendor',
+      //minChunks: Infinity,
       minChunks: module => /node_modules/.test(module.resource)
     }),
     new webpack.DefinePlugin({
       'process.env': {
-        'NODE_ENV': JSON.stringify(process.env.NODE_ENV),
-        'FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
-        'FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
-        'FIREBASE_DATABASE_URL': JSON.stringify(process.env.FIREBASE_DATABASE_URL),
-        'FIREBASE_PROJECT_ID': JSON.stringify(process.env.FIREBASE_PROJECT_ID),
-        'FIREBASE_STORAGE_BUCKET': JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
-        'FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
+        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
+        FIREBASE_API_KEY: JSON.stringify(process.env.FIREBASE_API_KEY),
+        FIREBASE_AUTH_DOMAIN: JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
+        FIREBASE_DATABASE_URL: JSON.stringify(process.env.FIREBASE_DATABASE_URL),
+        FIREBASE_PROJECT_ID: JSON.stringify(process.env.FIREBASE_PROJECT_ID),
+        FIREBASE_STORAGE_BUCKET: JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
+        FIREBASE_MESSAGING_SENDER_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
       }
     })
   ]

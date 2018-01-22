@@ -16,7 +16,7 @@ const fetchDataSuccess = (data) => {
 
 export const fetchData = () => {
   return dispatch => {
-    dispatch(fetchDataRequest());
+    //dispatch(fetchDataRequest());
     return firebase.get('pages')
       .then( data => dispatch(fetchDataSuccess(data)) )
   }

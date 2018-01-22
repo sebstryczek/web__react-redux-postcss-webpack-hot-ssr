@@ -1,10 +1,12 @@
-const express = require('express');
-const app = express();
+import express from 'express';
+import webpack from 'webpack';
+import webpackDevMiddleware from 'webpack-dev-middleware';
+import webpackHotMiddleware from 'webpack-hot-middleware';
 
-const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
-const webpackHotMiddleware = require('webpack-hot-middleware');
-const webpackConfig = require('../../webpack.config.dev');
+import webpackConfig from '../../webpack.config.dev';
+import getHtml from './ssr/getHtml';
+
+const app = express();
 const webpackCompiler = webpack(webpackConfig);
 
 app.use(webpackDevMiddleware(webpackCompiler, {
@@ -24,6 +26,11 @@ webpackCompiler.plugin('done', (stats) => {
 
     console.log('\x1b[36m%s\x1b[0m \x1b[46m%s\x1b[0m', 'Listening at:', 'http://localhost:3000');
   });
+});
+
+app.get('*', async (req, res) => {
+  const html = await getHtml(req);
+  res.send(`<!doctype html>${html}`);
 });
 
 app.listen(3000, (err) => {

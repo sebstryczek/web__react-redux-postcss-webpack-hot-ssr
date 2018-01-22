@@ -41,22 +41,28 @@
     "webpack": "^3.10.0"
   },
   "devDependencies": {
+    "babel-cli": "^6.26.0",
     "babel-jest": "^22.1.0",
+    "babel-plugin-transform-require-ignore": "^0.1.1",
     "cross-env": "^5.1.3",
     "css-hot-loader": "^1.3.5",
     "enzyme": "^3.3.0",
     "enzyme-adapter-react-16": "^1.1.1",
     "jest": "^22.1.4",
+    "react-router-config": "^1.0.0-beta.4",
     "react-test-renderer": "^16.2.0",
     "redux-mock-store": "^1.4.0",
     "shx": "^0.2.2",
+    "styled-components": "^3.0.2",
     "webpack-dev-middleware": "^2.0.4",
     "webpack-hot-middleware": "^2.21.0"
   },
   "scripts": {
     "test": "jest",
-    "dev-server": "node ./src/server/dev-server.js",
-    "build": "webpack -p --config webpack.config.prod.js",
+    "dev-server": "cross-env BABEL_ENV=node babel-node ./src/server/dev-server.js",
+    "prebuild": "shx rm -rf ./build",
+    "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.prod.js",
+    "postbuild": "cross-env BABEL_ENV=node babel -o ./build/index.js ./src/server/index.js",
     "postinstall": "yarn run build",
     "start": "node ./build/index.js"
   },

@@ -2,8 +2,14 @@
   "presets": [["env", { "modules": false }], "react", "stage-1"],
   "plugins": ["react-hot-loader/babel"],
   "env": {
+    "node": {
+      "presets": ["env", "react", "stage-1"],
+      "plugins": [
+        [ "babel-plugin-transform-require-ignore", { "extensions": [".css"] } ]
+      ]
+    },
     "test": {
-      "presets": [["env"], "react", "stage-1"]
+      "presets": ["env", "react", "stage-1"]
     }
   }
 }
