@@ -1,0 +1,17 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`[EXAMPLE TEST] Home page rendered 1`] = `
+<div>
+  <h1>
+    App
+  </h1>
+  <button>
+    Example
+  </button>
+  <div>
+    <h2>
+      Home
+    </h2>
+  </div>
+</div>
+`;

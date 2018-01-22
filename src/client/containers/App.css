@@ -1,0 +1,10 @@
+:root {
+  --body-background: purple;
+  --child-background: gold;
+}
+body {
+  background: var(--body-background);
+  & * {
+    background: var(--child-background);
+  }
+}
