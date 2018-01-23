@@ -3,6 +3,7 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -20,7 +21,7 @@ module.exports = {
   },
   output: {
     publicPath: '/',
-    filename: '[name].js',
+    filename: '[name].[hash].js'
   },
   module: {
     rules: [
@@ -61,7 +62,7 @@ module.exports = {
       prefix: 'public/images/icons-[hash]/',
       icons: { android: true, appleIcon: true, appleStartup: true, coast: false, favicons: true, firefox: true, opengraph: false, twitter: false, yandex: false, windows: false }
     }),
-    new ExtractTextPlugin({ filename: 'styles.css', disable: false, allChunks: true }),
+    new ExtractTextPlugin({ filename: 'styles.[contenthash].css', disable: false, allChunks: true }),
     new webpack.optimize.CommonsChunkPlugin({
       name: ['vendor'],
       minChunks: module => /node_modules/.test(module.resource)
@@ -76,6 +77,9 @@ module.exports = {
         FIREBASE_STORAGE_BUCKET: JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
         FIREBASE_MESSAGING_SENDER_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
       }
+    }),
+    new ManifestPlugin({
+      fileName: 'manifest.json'
     })
   ]
 };

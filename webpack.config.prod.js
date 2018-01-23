@@ -4,6 +4,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const ManifestPlugin = require('webpack-manifest-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = [
@@ -20,9 +21,9 @@ module.exports = [
       ]
     },
     output: {
+      publicPath: '/',
       path: path.resolve(__dirname, 'build'),
-      filename: 'public/js/[name].[hash].js',
-      publicPath: './'
+      filename: 'public/js/[name].[hash].js'
     },
     module: {
       rules: [
@@ -75,6 +76,9 @@ module.exports = [
           FIREBASE_STORAGE_BUCKET: JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
           FIREBASE_MESSAGING_SENDER_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
         }
+      }),
+      new ManifestPlugin({
+        fileName: 'manifest.json'
       })
     ],
     node: {
@@ -99,8 +103,7 @@ module.exports = [
     },
     output: {
       path: path.resolve(__dirname, 'build'),
-      filename: '[name].js',
-      publicPath: './'
+      filename: '[name].js'
     },
     module: {
       rules: [

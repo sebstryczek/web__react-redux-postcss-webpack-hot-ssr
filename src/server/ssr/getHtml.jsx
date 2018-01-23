@@ -14,10 +14,7 @@ import reducers from '../../client/reducers/fetchDataReducer';
 
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
-import firebase from '../../firebase/wrapper';
-firebase.init();
-
-export default async (req) => {
+export default async (req, manifest) => {
   const initialState = {};
   const store = createStore(reducers, initialState, applyMiddleware(thunk));
   const sheet = new ServerStyleSheet();
@@ -41,10 +38,11 @@ export default async (req) => {
     </StyleSheetManager>
   );
 
-  const absUrl = x => `${req.protocol}://${req.headers.host}/${x}`;
-  const styleFiles = ['styles.css'].map(absUrl);
+  const assetPath = x=> manifest[x] || x;
+  const absUrl = x => `//${req.headers.host}/${x}`;
+  const styleFiles = ['client.css'].map(assetPath).map(absUrl);
   const styleElement = sheet.getStyleElement();
-  const scriptFiles = ['vendor.js', 'client.js'].map(absUrl);
+  const scriptFiles = ['vendor.js', 'client.js'].map(assetPath).map(absUrl);
   const html = ReactDOMServer.renderToStaticMarkup(
     <Html appMarkup={appMarkup} initialState={store.getState()} styleFiles={styleFiles} styleElement={styleElement} scriptFiles={scriptFiles} />
   );
