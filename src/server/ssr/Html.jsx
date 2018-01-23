@@ -2,7 +2,7 @@ import React from 'react';
 
 class Html extends React.Component {
   render () {
-    const { initialState, appMarkup , styleFiles, styleElement, scriptFiles } = this.props;
+    const { initialState, appMarkup , cssUrls, styleElement, jsUrls } = this.props;
 
     return (
       <html>
@@ -10,7 +10,7 @@ class Html extends React.Component {
           <meta charSet="UTF-8" />
           <title>Server Side Rendered React App!!</title>
           {
-            styleFiles.map((item, index) => <link rel="stylesheet" key={index} href={item}/>)
+            cssUrls.map((item, index) => <link rel="stylesheet" key={index} href={item}/>)
           }
           {
             styleElement
@@ -22,7 +22,7 @@ class Html extends React.Component {
             <script dangerouslySetInnerHTML={{ __html: `window.APP_STATE=${JSON.stringify(initialState)}` }}></script>
           )}
           {
-            scriptFiles.map((item, index) => <script key={index} src={item}></script>)
+            jsUrls.map((item, index) => <script key={index} src={item}></script>)
           }
         </body>
       </html>

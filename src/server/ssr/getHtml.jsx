@@ -14,12 +14,11 @@ import reducers from '../../client/reducers/fetchDataReducer';
 
 import { ServerStyleSheet, StyleSheetManager } from 'styled-components';
 
-export default async (req, manifest) => {
+export default async (req, assets) => {
   const initialState = {};
   const store = createStore(reducers, initialState, applyMiddleware(thunk));
   const sheet = new ServerStyleSheet();
   const context = {};
-  
   const branch = matchRoutes(routes, req.url);
   const promises = branch.map( ({route}) => {
     const fetchData = route.component.fetchData;
@@ -38,13 +37,13 @@ export default async (req, manifest) => {
     </StyleSheetManager>
   );
 
-  const assetPath = x=> manifest[x] || x;
   const absUrl = x => `//${req.headers.host}/${x}`;
-  const styleFiles = ['client.css'].map(assetPath).map(absUrl);
+  const { cssFiles = [], jsFiles = [] } = assets;
+  const cssUrls = cssFiles.map(absUrl);
   const styleElement = sheet.getStyleElement();
-  const scriptFiles = ['vendor.js', 'client.js'].map(assetPath).map(absUrl);
+  const jsUrls = jsFiles.map(absUrl);
   const html = ReactDOMServer.renderToStaticMarkup(
-    <Html appMarkup={appMarkup} initialState={store.getState()} styleFiles={styleFiles} styleElement={styleElement} scriptFiles={scriptFiles} />
+    <Html appMarkup={appMarkup} initialState={store.getState()} cssUrls={cssUrls} styleElement={styleElement} jsUrls={jsUrls} />
   );
 
   return html;

@@ -20,7 +20,7 @@ import firebase from '../firebase/wrapper';
 
 const store = configureStore();
 
-const renderApp = () => ReactDOM.render(
+const renderApp = () => ReactDOM.hydrate(
   <AppContainer>
     <Provider store={store}>
       <BrowserRouter>

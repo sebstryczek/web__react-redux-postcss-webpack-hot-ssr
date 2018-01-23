@@ -7,6 +7,9 @@ import webpackHotMiddleware from 'webpack-hot-middleware';
 import webpackConfig from '../../webpack.config.dev';
 import getHtml from './ssr/getHtml';
 
+import firebase from '../firebase/wrapper';
+firebase.init();
+
 const app = express();
 const webpackCompiler = webpack(webpackConfig);
 
@@ -35,7 +38,13 @@ app.get('*', async (req, res) => {
   const memoryFs = webpackCompiler.outputFileSystem;
   const manifestStr = memoryFs.readFileSync(path.resolve("manifest.json"), 'utf8');
   const manifest = JSON.parse( manifestStr );
-  const html = await getHtml(req, manifest);
+
+  const assetPath = x=> manifest[x] || x;
+  const cssFiles =  ['client.css'].map(assetPath);
+  const jsFiles =  ['vendor.js', 'client.js'].map(assetPath);
+  const assets = {cssFiles, jsFiles}
+  const html = await getHtml(req, assets);
+  
   res.send(`<!doctype html>${html}`);
 });
 
