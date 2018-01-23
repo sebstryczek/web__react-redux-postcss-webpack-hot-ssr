@@ -4,7 +4,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
 const nodeExternals = require('webpack-node-externals');
 
 module.exports = [
@@ -53,7 +52,7 @@ module.exports = [
     plugins: [
       new HtmlWebpackPlugin({
         template: './src/client/template/index.html',
-        filename: 'public/index.html'
+        filename: '_index.html'
       }),
       new FaviconsWebpackPlugin({
         logo: './src/client/template/favicon.png',
@@ -76,9 +75,6 @@ module.exports = [
           FIREBASE_STORAGE_BUCKET: JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
           FIREBASE_MESSAGING_SENDER_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
         }
-      }),
-      new ManifestPlugin({
-        fileName: 'manifest.json'
       })
     ],
     node: {

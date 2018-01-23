@@ -3,7 +3,6 @@ const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const ManifestPlugin = require('webpack-manifest-plugin');
 const dotenv = require('dotenv');
 
 dotenv.config();
@@ -54,9 +53,10 @@ module.exports = {
     new webpack.NamedModulesPlugin(),
     new webpack.HotModuleReplacementPlugin(),
     new webpack.NoEmitOnErrorsPlugin(),
-    //new HtmlWebpackPlugin({
-    //  template: './src/client/template/index.html',
-    //}),
+    new HtmlWebpackPlugin({
+      template: './src/client/template/index.html',
+      filename: '_index.html'
+    }),
     new FaviconsWebpackPlugin({
       logo: './src/client/template/favicon.png',
       prefix: 'public/images/icons-[hash]/',
@@ -77,9 +77,6 @@ module.exports = {
         FIREBASE_STORAGE_BUCKET: JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
         FIREBASE_MESSAGING_SENDER_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
       }
-    }),
-    new ManifestPlugin({
-      fileName: 'manifest.json'
     })
   ]
 };

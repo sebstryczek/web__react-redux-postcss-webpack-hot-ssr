@@ -34,17 +34,9 @@ webpackCompiler.plugin('done', (stats) => {
 });
 
 app.get('*', async (req, res) => {
-  //const assetsByChunkName = res.locals.webpackStats.toJson().assetsByChunkName;
   const memoryFs = webpackCompiler.outputFileSystem;
-  const manifestStr = memoryFs.readFileSync(path.resolve("manifest.json"), 'utf8');
-  const manifest = JSON.parse( manifestStr );
-
-  const assetPath = x=> manifest[x] || x;
-  const cssFiles =  ['client.css'].map(assetPath);
-  const jsFiles =  ['vendor.js', 'client.js'].map(assetPath);
-  const assets = {cssFiles, jsFiles}
-  const html = await getHtml(req, assets);
-  
+  const index = memoryFs.readFileSync(path.resolve("_index.html"), 'utf8');
+  const html = await getHtml(req, index);
   res.send(`<!doctype html>${html}`);
 });
 

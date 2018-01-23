@@ -6,6 +6,7 @@ import routes from '../routes';
 import RenderRoutes from '../components/helpers/RenderRoutes';
 import Page3 from './Page3';
 import Example from '../components/Example';
+import ExampleStyledComponent from '../components/ExampleStyledComponent';
 
 import { fetchData } from '../actions/fetchDataActions';
 
@@ -30,6 +31,7 @@ class App extends React.Component {
       <div>
         <h1>App</h1>
         <Example />
+        <ExampleStyledComponent />
         {
           this.props.data && this.props.data.map(
             (item, i) => <p key={i}>{item}</p>

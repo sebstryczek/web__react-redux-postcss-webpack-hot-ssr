@@ -9,6 +9,18 @@ exports[`[EXAMPLE TEST] Home page rendered 1`] = `
     Example
   </button>
   <div>
+    <button
+      className="sc-bdVaJa gzRQLa"
+    >
+      Normal Button
+    </button>
+    <button
+      className="sc-bdVaJa dCTgtY"
+    >
+      Primary Button
+    </button>
+  </div>
+  <div>
     <h2>
       Home
     </h2>

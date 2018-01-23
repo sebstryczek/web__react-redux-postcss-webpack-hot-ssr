@@ -19,19 +19,14 @@ const readFile = filePath => new Promise((resolve, reject) => {
 });
 
 (async () => {
-  const manifestPath = path.join(__dirname, './manifest.json');
-  const manifestBuffer = await readFile(manifestPath)
-  const manifest = JSON.parse(manifestBuffer.toString());
-  
-  const assetPath = x=> manifest[x] || x;
-  const cssFiles =  ['client.css'].map(assetPath);
-  const jsFiles =  ['vendor.js', 'client.js'].map(assetPath);
-  const assets = {cssFiles, jsFiles}
-  
+  const indexPath = path.join(__dirname, './_index.html');
+  const indexBuffer = await readFile(indexPath)
+  const index = indexBuffer.toString();
+
   app.use('/', express.static(__dirname));
   
   app.get('*', async (req, res) => {
-    const html = await getHtml(req, assets);
+    const html = await getHtml(req, index);
     res.send(`<!doctype html>${html}`);
   });
   
