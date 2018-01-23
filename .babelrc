@@ -1,7 +1,11 @@
 {
-  "presets": [["env", { "modules": false }], "react", "stage-1"],
-  "plugins": ["react-hot-loader/babel"],
   "env": {
+    "web": {
+      "presets": [
+        ["env", { "modules": false }], "react", "stage-1"
+      ],
+      "plugins": ["react-hot-loader/babel"]
+    },
     "node": {
       "presets": ["env", "react", "stage-1"],
       "plugins": [

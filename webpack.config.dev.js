@@ -1,6 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const dotenv = require('dotenv');
 
@@ -30,7 +31,7 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             forceEnv: 'web'
-          },
+          }
         }
       },
       {
@@ -44,7 +45,7 @@ module.exports = {
               { loader: 'postcss-loader' }
             ]
           })
-        ),
+        )
       }
     ]
   },
@@ -54,12 +55,15 @@ module.exports = {
     new webpack.NoEmitOnErrorsPlugin(),
     //new HtmlWebpackPlugin({
     //  template: './src/client/template/index.html',
-    //  favicon: './src/client/template/favicon.png'
     //}),
+    new FaviconsWebpackPlugin({
+      logo: './src/client/template/favicon.png',
+      prefix: 'public/images/icons-[hash]/',
+      icons: { android: true, appleIcon: true, appleStartup: true, coast: false, favicons: true, firefox: true, opengraph: false, twitter: false, yandex: false, windows: false }
+    }),
     new ExtractTextPlugin({ filename: 'styles.css', disable: false, allChunks: true }),
     new webpack.optimize.CommonsChunkPlugin({
       name: ['vendor'],
-      //minChunks: Infinity,
       minChunks: module => /node_modules/.test(module.resource)
     }),
     new webpack.DefinePlugin({

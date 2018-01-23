@@ -38,7 +38,8 @@
     "redux-thunk": "^2.2.0",
     "style-loader": "^0.19.1",
     "uglifyjs-webpack-plugin": "^1.1.6",
-    "webpack": "^3.10.0"
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",
@@ -59,12 +60,11 @@
   },
   "scripts": {
     "test": "jest",
-    "dev-server": "cross-env BABEL_ENV=node babel-node ./src/server/dev-server.js",
+    "dev-server": "babel-node ./src/server/dev-server.js",
     "prebuild": "shx rm -rf ./build",
-    "build": "cross-env NODE_ENV=production webpack -p --config webpack.config.prod.js",
-    "postbuild": "cross-env BABEL_ENV=node babel -o ./build/index.js ./src/server/index.js",
+    "build": "webpack -p --config webpack.config.prod.js",
     "postinstall": "yarn run build",
-    "start": "node ./build/index.js"
+    "start": "node ./build/server.js"
   },
   "jest": {
     "moduleNameMapper": {
