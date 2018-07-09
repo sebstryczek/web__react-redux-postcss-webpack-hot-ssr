@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
@@ -39,13 +39,11 @@ module.exports = [
         {
           test: /\.css$/,
           include: path.resolve(__dirname, 'src'),
-          use: ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: [
-              { loader: 'css-loader', options: { modules: true, camelCase: true, sourceMap: true } },
-              { loader: 'postcss-loader' }
-            ]
-          })
+          use: [
+            { loader: MiniCssExtractPlugin.loader, options: {} },
+            { loader: 'css-loader', options: { modules: true, camelCase: true, sourceMap: true } },
+            { loader: 'postcss-loader' }
+          ]
         }
       ]
     },
@@ -54,16 +52,16 @@ module.exports = [
         template: './src/client/template/index.html',
         filename: '_index.html'
       }),
+      new MiniCssExtractPlugin({
+        filename: 'public/css/styles.[contenthash].css', disable: false, allChunks: true
+      }),
       new FaviconsWebpackPlugin({
         logo: './src/client/template/favicon.png',
         prefix: 'public/images/icons-[hash]/',
         icons: { android: true, appleIcon: true, appleStartup: true, coast: false, favicons: true, firefox: true, opengraph: false, twitter: false, yandex: false, windows: false }
       }),
-      new ExtractTextPlugin({ filename: 'public/css/styles.[contenthash].css', disable: false, allChunks: true }),
-      new UglifyJsPlugin({ sourceMap: true, uglifyOptions: {output: { comments: false }} }),
-      new webpack.optimize.CommonsChunkPlugin({
-        name: 'vendor',
-        minChunks: module => /node_modules/.test(module.resource)
+      new UglifyJsPlugin({
+        sourceMap: true, uglifyOptions: {output: { comments: false }}
       }),
       new webpack.DefinePlugin({
         'process.env': {
@@ -77,11 +75,14 @@ module.exports = [
         }
       })
     ],
-    node: {
-      fs: 'empty',
-      net: 'empty',
-      tls: 'empty',
-    }
+    optimization: {
+      splitChunks: {
+        cacheGroups: {
+          vendor: { test: /node_modules/, chunks: "initial", name: "vendor", enforce: true }
+        }
+      }
+    },
+    node: { fs: 'empty', net: 'empty', tls: 'empty' }
   },
 
   // NODE SERVER
@@ -115,13 +116,6 @@ module.exports = [
         }
       ]
     },
-    node: {
-      console: false,
-      global: false,
-      process: false,
-      Buffer: false,
-      __filename: false,
-      __dirname: false,
-    }
+    node: { console: false, global: false, process: false, Buffer: false, __filename: false, __dirname: false }
   }
 ];

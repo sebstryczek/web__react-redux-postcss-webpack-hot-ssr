@@ -22,7 +22,7 @@ app.use(webpackDevMiddleware(webpackCompiler, {
 
 app.use(webpackHotMiddleware(webpackCompiler));
 
-webpackCompiler.plugin('done', (stats) => {
+webpackCompiler.hooks.done.tap('CompileSuccessInfo', (stats) => {
   process.nextTick(() => {
     stats = stats.toJson();
     if (stats.errors && stats.errors.length > 0) {
@@ -35,7 +35,8 @@ webpackCompiler.plugin('done', (stats) => {
 
 app.get('*', async (req, res) => {
   const memoryFs = webpackCompiler.outputFileSystem;
-  const index = memoryFs.readFileSync(path.resolve("_index.html"), 'utf8');
+  const filePath = path.join(webpackCompiler.outputPath, '_index.html');
+  const index = memoryFs.readFileSync(filePath, 'utf8');
   const html = await getHtml(req, index);
   res.send(`<!doctype html>${html}`);
 });

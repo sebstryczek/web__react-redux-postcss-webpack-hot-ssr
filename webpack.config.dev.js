@@ -1,11 +1,11 @@
 const path = require('path');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
-const ExtractTextPlugin = require('extract-text-webpack-plugin');
-const dotenv = require('dotenv');
 
-dotenv.config();
+const dotenv = require('dotenv');
+dotenv.config({ path: '.env.development' });
 
 module.exports = {
   devtool: 'cheap-eval-source-map',
@@ -38,13 +38,9 @@ module.exports = {
         test: /\.css$/,
         include: path.resolve(__dirname, 'src'),
         use: ['css-hot-loader'].concat(
-          ExtractTextPlugin.extract({
-            fallback: "style-loader",
-            use: [
-              { loader: 'css-loader', options: { modules: true, camelCase: true, sourceMap: true } },
-              { loader: 'postcss-loader' }
-            ]
-          })
+          { loader: MiniCssExtractPlugin.loader, options: {} },
+          { loader: 'css-loader', options: { modules: true, camelCase: true, sourceMap: true } },
+          { loader: 'postcss-loader' }
         )
       }
     ]
@@ -57,15 +53,13 @@ module.exports = {
       template: './src/client/template/index.html',
       filename: '_index.html'
     }),
+    new MiniCssExtractPlugin({
+      filename: 'public/css/styles.[contenthash].css', disable: false, allChunks: true
+    }),
     new FaviconsWebpackPlugin({
       logo: './src/client/template/favicon.png',
       prefix: 'public/images/icons-[hash]/',
       icons: { android: true, appleIcon: true, appleStartup: true, coast: false, favicons: true, firefox: true, opengraph: false, twitter: false, yandex: false, windows: false }
-    }),
-    new ExtractTextPlugin({ filename: 'styles.[contenthash].css', disable: false, allChunks: true }),
-    new webpack.optimize.CommonsChunkPlugin({
-      name: ['vendor'],
-      minChunks: module => /node_modules/.test(module.resource)
     }),
     new webpack.DefinePlugin({
       'process.env': {
@@ -78,5 +72,12 @@ module.exports = {
         FIREBASE_MESSAGING_SENDER_ID: JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
       }
     })
-  ]
+  ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        vendor: { test: /node_modules/, chunks: "initial", name: "vendor", enforce: true }
+      }
+    }
+  },
 };
