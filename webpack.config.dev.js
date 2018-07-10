@@ -15,6 +15,7 @@ const dotenv = require('dotenv');
 dotenv.config({ path: '.env.development' });
 
 module.exports = {
+  mode: process.env.NODE_ENV,
   devtool: 'cheap-eval-source-map',
   resolve: { extensions: ['.js', '.jsx'] },
   entry: {
@@ -78,7 +79,6 @@ module.exports = {
     }),
     new webpack.DefinePlugin({
       'process.env': {
-        NODE_ENV: JSON.stringify(process.env.NODE_ENV),
         FIREBASE_API_KEY: JSON.stringify(process.env.FIREBASE_API_KEY),
         FIREBASE_AUTH_DOMAIN: JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
         FIREBASE_DATABASE_URL: JSON.stringify(process.env.FIREBASE_DATABASE_URL),

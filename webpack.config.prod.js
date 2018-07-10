@@ -16,6 +16,7 @@ const postcssClean = require('postcss-clean');
 module.exports = [
   // REACT CLIENT
   {
+    mode: process.env.NODE_ENV,
     name: 'client',
     target: 'web',
     devtool: 'source-map',
@@ -80,7 +81,6 @@ module.exports = [
       }),
       new webpack.DefinePlugin({
         'process.env': {
-          NODE_ENV: JSON.stringify(process.env.NODE_ENV),
           FIREBASE_API_KEY: JSON.stringify(process.env.FIREBASE_API_KEY),
           FIREBASE_AUTH_DOMAIN: JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
           FIREBASE_DATABASE_URL: JSON.stringify(process.env.FIREBASE_DATABASE_URL),
@@ -102,6 +102,7 @@ module.exports = [
 
   // NODE SERVER
   {
+    mode: process.env.NODE_ENV,
     name: 'server',
     target: 'node',
     externals: [nodeExternals()],
