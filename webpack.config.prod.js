@@ -6,6 +6,13 @@ const FaviconsWebpackPlugin = require('favicons-webpack-plugin');
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const nodeExternals = require('webpack-node-externals');
 
+const postcssCustomProperties = require('postcss-custom-properties');
+const postcssPresetEnv = require('postcss-preset-env');
+const postcssImport = require('postcss-import');
+const postcssApply = require('postcss-apply');
+const postcssNesting = require('postcss-nesting');
+const postcssClean = require('postcss-clean');
+
 module.exports = [
   // REACT CLIENT
   {
@@ -42,7 +49,15 @@ module.exports = [
           use: [
             { loader: MiniCssExtractPlugin.loader, options: {} },
             { loader: 'css-loader', options: { modules: true, camelCase: true, sourceMap: true } },
-            { loader: 'postcss-loader' }
+            { loader: 'postcss-loader',
+              options: {
+                ident: 'postcss',
+                plugins: [
+                  postcssCustomProperties({preserve: false}),
+                  postcssPresetEnv({ insertBefore: { 'all-property': [postcssImport, postcssApply, postcssNesting, postcssClean] } })
+                ]
+              }
+            }
           ]
         }
       ]

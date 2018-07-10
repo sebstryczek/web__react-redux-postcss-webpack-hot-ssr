@@ -1,7 +1,8 @@
 :root {
-  --body-background: purple;
-  --child-background: gold;
+  --body-background: red;
+  --child-background: blue;
 }
+
 body {
   background: var(--body-background);
   & * {
